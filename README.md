@@ -32,24 +32,24 @@ https://github.com/codingspecialist/Springboot-Security-JWT-Easy
 ## BasicAuthenticationFilter 등록
 ```java
 
-	// 토큰을 검증해서 정상적인 사용자인지 확인
-	String jwtToken = request.getHeader("Authorization").replace("Bearer ", "");
-	String username
-		= JWT.require(Algorithm.HMAC512("cos")).build().verify(jwtToken).getClaim("username").asString();
+// 토큰을 검증해서 정상적인 사용자인지 확인
+String jwtToken = request.getHeader("Authorization").replace("Bearer ", "");
+String username
+	= JWT.require(Algorithm.HMAC512("cos")).build().verify(jwtToken).getClaim("username").asString();
 	
-	// DB에서 유저정보 조회
-	User user = userRepository.findByUsername(username);
+// DB에서 유저정보 조회
+User user = userRepository.findByUsername(username);
 	
-	// Authentication 객체 강제로 생성
-    PrincipalDetails principalDetails = new PrincipalDetails(user);
-    Authentication authentication =
-            new UsernamePasswordAuthenticationToken(
-                    principalDetails, //나중에 컨트롤러에서 DI해서 쓸 때 사용하기 편함.
-                    null, // 패스워드는 모르니까 null 처리, 어차피 지금 인증하는게 아니니까!!
-                    principalDetails.getAuthorities());
+// Authentication 객체 강제로 생성
+PrincipalDetails principalDetails = new PrincipalDetails(user);
+Authentication authentication =
+	new UsernamePasswordAuthenticationToken(
+        principalDetails, //나중에 컨트롤러에서 DI해서 쓸 때 사용하기 편함.
+        null, // 패스워드는 모르니까 null 처리, 어차피 지금 인증하는게 아니니까!!
+        principalDetails.getAuthorities());
 
-    // 강제로 시큐리티의 세션에 접근하여 값 저장
-    SecurityContextHolder.getContext().setAuthentication(authentication);
+// 강제로 시큐리티의 세션에 접근하여 값 저장
+SecurityContextHolder.getContext().setAuthentication(authentication);
 ```
 
 
